@@ -6,19 +6,19 @@ Nos arquivos se encontra:
 A pasta /Entradas com as matrizes A e vetores b em .txt (Ax = b) para ser lido.
 Um gabarito com vetores solução do sistema (valores são aproximações).
 Os .c de cada método:
-                -LU.c
-                -Cholesky.c
-                -Gauss-Jacobi.c
-                -Gauss-Seidel.c
+-LU.c
+-Cholesky.c
+-Gauss-Jacobi.c
+-Gauss-Seidel.c
 
 E o makefile, com as seguintes regras:
-                -make all == carrega todos .o e executaveiis, criando pastas para armazena-los e pastas de saida para cada método.
+-make all == carrega todos .o e executaveiis, criando pastas para armazena-los e pastas de saida para cada método.
                 
-                -make LU  (LU)
-                -make C   (Cholesky)
-                -make GJ  (Gauss-Jacobi)
-                -make GS  (Gauss-Seidel)
+-make LU  (LU)
+-make C   (Cholesky)
+-make GJ  (Gauss-Jacobi)
+-make GS  (Gauss-Seidel)
 
-                    regras que rodam o executavel de cada arquivo, armazenando o .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com o tempo que cada método levou para terminar a execução, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
+regras que rodam o executavel de cada arquivo, armazenando o .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com o tempo que cada método levou para terminar a execução, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
 
-                -make clean == remove todas as pastas e arquivos gerados.
+-make clean == remove todas as pastas e arquivos gerados.
