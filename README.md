@@ -1,36 +1,26 @@
-Códigos do Projeto do PICME, feitos por David Propato com auxílio do professor Fabiano Petronetto.
+Códigos do Projeto do PICME na UFES, feitos por David Propato com auxílio do professor Fabiano Petronetto.
 
-O projeto consiste no estudo de sistemas lineares e suas resoluções aplicadas em códigos (nesse caso, em C), focando inicialmente nos métodos LU e Cholesky e depois nos métodos interativos de Gauss-Jacobi e Gauss-Seidel.
+O projeto consiste no estudo de sistemas lineares e suas resoluções aplicadas em códigos (nesse caso, em C), focando inicialmente nos métodos LU e Cholesky e depois nos métodos iterativos de Gauss-Jacobi e Gauss-Seidel.
+
+Analisando também os vetores soluções gerados nos métodos iterativos antes de se chegar no vetor solução final, analisando suas normas e como progridem ao longo da execução do código e da solução do sistema.
 
 Nos arquivos se encontra:
 
-A pasta /Entradas com as matrizes A e vetores b em .txt (Ax = b) para ser lido.
+    A pasta /Entradas com as matrizes A e vetores b e as dimensões em .txt (Ax = b) para serem lidos.
+    Uma pasta GabaritosAproximados com vetores solução do sistema (valores são aproximações).
+    E a pasta pontoC, que contém:
 
-Um gabarito com vetores solução do sistema (valores são aproximações).
-
-Os .c de cada método:
-
--LU.c
-
--Cholesky.c
-
--Gauss-Jacobi.c
-
--Gauss-Seidel.c
+        Uma pasta Funcoes que armazena o TAD de dados das soluções dos sistemas, tendo funções para calcular as normas e gerar um arquivo de saida com os dados importantes.
+        E os .c de cada método:
+            
+            -LU.c
+            -Cholesky.c
+            -Gauss-Jacobi.c
+            -Gauss-Seidel.c
 
 
 E o makefile, com as seguintes regras:
 
--make all == carrega todos .o e executaveiis, criando pastas para armazena-los e pastas de saida para cada método.
-                
--make LU  (LU)
-
--make C   (Cholesky)
-
--make GJ  (Gauss-Jacobi)
-
--make GS  (Gauss-Seidel)
-
-regras que rodam o executavel de cada arquivo, armazenando o .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com o tempo que cada método levou para terminar a execução, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
-
--make clean == remove todas as pastas e arquivos gerados.
+    make all == carrega todos .o e executaveis, criando pastas para armazena-los e pastas de saida para cada método.
+    make run == executa os códigos, armazenando o .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com dados sobre os métodos, tendo o tempo que levou para terminar a execução de cada método e a norma do vetor resultante final, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
+    make clean == remove todas as pastas e arquivos gerados.
