@@ -4,27 +4,22 @@
 #include <time.h>
 #include "Funcoes/Dados.h"
 
-void multiplica_U(int n, double **U, double *Y){
+void multiplica_U(Dados* dados){
 
   int i, j;
-  double A[n], X[n];
 
-  for(i=0; i<n; i++){
-    A[i] = 0;
-    X[i] = 1;
-  }
-
-  for(i=n-1; i>=0; i--){
+  for(i=dados->n-1; i>=0; i--){
   
-  for(j=n-1; j>=0;j--)
-  {A[i] = A[i] + X[j]*U[i][j];}
+    for(j=dados->n-1; j>=0;j--)
+      dados->ant[i] = dados->ant[i] + dados->x[j]*dados->A[i][j];
     
-  A[i] = A[i] - U[i][i];
-  X[i] = Y[i] - A[i];
-  if(U[i][i] != 0 && U[i][i] != 1){
-  X[i] = X[i]/U[i][i];}
+    dados->ant[i] = dados->ant[i] - dados->A[i][i];
+    dados->x[i] = dados->b[i] - dados->ant[i];
+    
+    if(dados->A[i][i] != 0 && dados->A[i][i] != 1){
+      dados->x[i] = dados->x[i]/dados->A[i][i];}
 
-  Y[i] = X[i];
+    dados->b[i] = dados->x[i];
   }
 }
 
@@ -32,96 +27,67 @@ int main(int argc, char** argv){
 
   time_t tempo;
   tempo = clock();
-  
-  FILE* entrada = fopen(argv[1], "r");
+
+  Dados* dados = lerEntrada(argv[1]);
   FILE* saida = fopen(argv[2], "w");
 
-  int n, i, j, a=0, x=0, y=0;
+  int i=1, j=0, a=0, x=0, y=0;
+  double aux;
 
-  double **U, *X, aux;
+  while(y<dados->n && x<dados->n){
 
-  fscanf(entrada, "%d", &n);
+    //checa elemento lider nulo na linha y
+    while(dados->A[y][j] == 0 && x<dados->n){
 
-  U = (double**)malloc(sizeof(double*)*n);
-  X = (double*)malloc(sizeof(double)*n);
-  
-  for(i=0; i<n; i++){
+      if(dados->A[i][j] != 0){
 
-    U[i] = (double*)malloc(sizeof(double)*n);
+        for(a = 0; a<dados->n; a++){
+          aux = dados->A[y][a];
+          dados->A[y][a] = dados->A[i][a];
+          dados->A[i][a] = aux;
+        }
 
-    for(j=0; j<n; j++){
-      fscanf(entrada, "%lf,", &U[i][j]);}
-  }
+        aux = dados->b[i];
+        dados->b[i] = dados->b[y];
+        dados->b[y] = aux;
+        }
 
-  for(i=0; i<n; i++){
-   fscanf(entrada, "%lf", &X[i]);
-  }
+      i++;
 
-i = 1; j = 0;
-while(y<n && x<n){
-
-//checa elemento lider nulo na linha y
-while(U[y][j] == 0 && x < n){
-
-    if(U[i][j] != 0){
-
-    for(a = 0; a < n; a++){
-      aux = U[y][a];
-      U[y][a] = U[i][a];
-      U[i][a] = aux;
+      if(dados->A[y][j] == 0 && i>=dados->n){
+        i = y+1;
+        x++;
+        j = x;}
     }
 
-    aux = X[i];
-    X[i] = X[y];
-    X[y] = aux;
+    //faz as operaçoes elementares na matriz A e no vetor b 
+    for(i = y+1; i<dados->n; i++){
+
+      dados->b[i] = dados->b[i] - ((dados->A[i][x]/dados->A[y][x]) * dados->b[y]);
+
+      for(j=dados->n-1; j>=x; j--){
+        dados->A[i][j] = dados->A[i][j] - ((dados->A[i][x]/dados->A[y][x]) * dados->A[y][j]);
+      }
     }
 
-    i++;
-
-    if(U[y][j] == 0 && i >= n){
-      i = y+1;
-      x++;
-      j = x;}
+    y++;
+    x++;
+    j = x;
+    i = y;
   }
 
-//faz as operaçoes elementares na matriz U e no vetor Y e preenche a matriz L 
-  for(i = y+1; i < n; i++){
+  //calcula o vetor solucao do sistema
+  multiplica_U(dados);
 
-   X[i] = X[i] - ((U[i][x]/U[y][x]) * X[y]);
+  imprimeVet(argv[2], dados->n, dados->b);
 
-    for(j=n-1; j>=x; j--){
-      U[i][j] = U[i][j] - ((U[i][x]/U[y][x]) * U[y][j]);
-     }
-  }
-
-   y++;
-   x++;
-   j = x;
-   i = y;
- }
-
-//calcula o vetor solucao do sistema
-multiplica_U(n, U, X);
-
-//print
-  for(i=0; i<n; i++){
-    fprintf(saida, "%.15lf\n", X[i]);
-  }
-
-  fclose(entrada);
   fclose(saida);
 
   tempo = clock() - tempo;
 
-  Dados("GS", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, 0, Norma(n, X));
-  
-  free(X);
+  Infos("LU", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, 0, Norma(dados->n, dados->b));
 
-  for(i=0;i<n;i++){
-    free(U[i]);
-  }
-  free(U);
-
+  cleanDados(dados);
 
   return 0;
 }

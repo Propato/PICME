@@ -4,53 +4,34 @@
 #include <time.h>
 #include "Funcoes/Dados.h"
 
-void Gauss_jacobi(int n, double **matriz, double *vet, double *x){
+void Gauss_jacobi(Dados* dados){
 
-  double soma, aux[n];
+  double soma;
   int i, j;
 
-  for(i=0; i<n; i++)
-    aux[i] = x[i];
+  for(i=0; i<dados->n; i++)
+    dados->ant[i] = dados->x[i];
 
-  for(i=0; i<n; i++){
+  for(i=0; i<dados->n; i++){
 
-    soma = vet[i] + x[i]*matriz[i][i];
+    soma = dados->b[i] + dados->x[i]*dados->A[i][i];
 
-    for(j=0; j<n; j++){
-      soma = soma - aux[j]*matriz[i][j];
+    for(j=0; j<dados->n; j++){
+      soma = soma - dados->ant[j]*dados->A[i][j];
     }
-    x[i] = soma/matriz[i][i];
+    dados->x[i] = soma/dados->A[i][i];
   }
 }
 
-void clean(int n, double **matriz, double *vet, double *x, double *aux){
-  free(vet);
-  free(x);
-  free(aux);
-
-  for(int i=0; i<n; i++){
-    free(matriz[i]);
-  }free(matriz);
-}
-
-void imprime_vet(int n, double *vet, FILE* saida){
-
-  for(int i=0; i<n; i++){
-
-    fprintf(saida, "%.15lf\n", vet[i]);
-  }
-}
-
-int erro(int n, double *x, double *y){
+int erro(Dados* dados){
 
   double aux, X, Y, somaX=0, somaY=0;
-  int i;
 
-  for(i=0; i<n; i++){
+  for(int i=0; i<dados->n; i++){
 
-    aux = x[i] - y[i];
+    aux = dados->x[i] - dados->ant[i];
     somaX = somaX + (aux*aux);
-    somaY = somaY + (y[i]*y[i]);
+    somaY = somaY + (dados->ant[i]*dados->ant[i]);
   }
   
   X = sqrt(somaX);
@@ -68,66 +49,33 @@ int main(int argc, char** argv){
   time_t tempo;
   tempo = clock();
   
-  FILE* entrada = fopen(argv[1], "r");
-  FILE* saida = fopen(argv[2], "w");
+  Dados* dados = lerEntrada(argv[1]);
   FILE* normas = fopen(argv[3], "w");
 
-  int n, i, j;
-
-  double *x, **matriz, *vet, *aux;
-
-  fscanf(entrada, "%d", &n);
-
-  matriz = (double**)malloc(sizeof(double*)*n);
-
-  x = (double*)malloc(sizeof(double)*n);
-  vet = (double*)malloc(sizeof(double)*n);
-  aux = (double*)malloc(sizeof(double)*n);
-
-  for(i=0; i<n; i++){
-
-    matriz[i] = (double*)malloc(sizeof(double)*n);
-
-    for(j=0; j<n; j++){
-      fscanf(entrada, "%lf,", &matriz[i][j]);
-    }
-  }
-
-  for(i=0; i<n; i++){
-    fscanf(entrada, "%lf", &vet[i]);
-    x[i] = 0.5;
-  }
+  int i=0;
 
   int igualdade = 0;
 
-  i=0;
-  while(!igualdade && i< (n*6)){
-  i++;
-
-    for(j=0; j<n; j++){
-      aux[j] = x[j];
-    }
-
-    Gauss_jacobi(n, matriz, vet, x);
+  while(!igualdade && i< (dados->n*6)){
+    i++;
+    Gauss_jacobi(dados);
 
     if(i%10 == 0)
-      fprintf(normas, "%.15lf\n", Norma(n, x));
+      fprintf(normas, "%.10lf\n", Norma(dados->n, dados->x));
 
-    igualdade = erro(n, x, aux);
+    igualdade = erro(dados);
   }
     if(i%10 != 0)
-      fprintf(normas, "%.15lf\n", Norma(n, x));
+      fprintf(normas, "%.10lf\n", Norma(dados->n, dados->x));
 
-  imprime_vet(n, x, saida);
-
-  fclose(entrada);
-  fclose(saida);
+  imprimeVet(argv[2], dados->n, dados->x);
 
   tempo = clock() - tempo;
 
-  Dados("GJ", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, i, Norma(n, x));
+  Infos("GJ", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, i*3, Norma(dados->n, dados->x));
   
-  clean(n, matriz, vet, x, aux);
+  cleanDados(dados);
+  fclose(normas);
 
   return 0;
 }

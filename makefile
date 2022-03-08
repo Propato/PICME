@@ -7,7 +7,8 @@ obj = pontoC/LU.o pontoC/Cholesky.o pontoC/Gauss-Jacobi.o pontoC/Gauss-Seidel.o 
 pastas = obj Executaveis Saidas/LU Saidas/Cholesky Saidas/Gauss-Jacobi Saidas/Gauss-Seidel
 
 ##ALTERE VALOR DE <matriz> PARA ESPECIFICAR QUAL ARQUIVO DESEJA LER E EXECUTAR##
-matriz = 2
+##Possiveis valores -> 1, 2 e 3##
+matriz = 3
 
 arqLU = Entradas/matriz$(matriz).txt Saidas/LU/vet$(matriz).txt
 arqC  = Entradas/matriz$(matriz).txt Saidas/Cholesky/vet$(matriz).txt
@@ -39,7 +40,10 @@ diretorios:
 	@echo Pastas geradas e arquivos armazenados!!
 	
 clean:
-	rm -rf obj Saidas Executaveis
+	rm -rf *.o obj Saidas $(executaveis) Executaveis
 
 run:
 	./Executaveis/LUexe $(arqLU) & ./Executaveis/Cexe $(arqC) & ./Executaveis/GJexe $(arqGJ) & ./Executaveis/GSexe $(arqGS)
+
+val:
+	valgrind ./Executaveis/LUexe $(arqLU) & valgrind ./Executaveis/Cexe $(arqC) & valgrind ./Executaveis/GJexe $(arqGJ) & valgrind ./Executaveis/GSexe $(arqGS)
