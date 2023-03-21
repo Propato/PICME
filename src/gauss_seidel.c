@@ -53,12 +53,10 @@ void main_GS(char** argv){
   char* nome_saida = (char*)malloc(sizeof(char)*30);
   strcpy(nome_saida, "Saidas/GS/vet");
   strcat(nome_saida, &argv[1][strlen(argv[1])-5]);
-  printf("%s", nome_saida);
 
   char* nome_normas = (char*)malloc(sizeof(char)*30);
   strcpy(nome_normas, "Saidas/GS/normas_vet");
   strcat(nome_normas, &argv[1][strlen(argv[1])-5]);
-  printf("%s", nome_normas);
 
   Dados* dados = lerEntrada(argv[1]);
   FILE* normas = fopen(nome_normas, "w");

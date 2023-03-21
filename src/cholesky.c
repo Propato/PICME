@@ -52,7 +52,6 @@ void main_C(char** argv){
   char* nome_saida = (char*)malloc(sizeof(char)*30);
   strcpy(nome_saida, "Saidas/C/vet");
   strcat(nome_saida, &argv[1][strlen(argv[1])-5]);
-  printf("%s", nome_saida);
 
   Dados* dados = lerEntrada(argv[1]);
 

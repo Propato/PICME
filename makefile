@@ -65,7 +65,7 @@ CPP = gcc
 CFLAGS = -lm -g -Wall
 
 SRC = $(wildcard $(SRC_FOLDER)/*.c)
-OBJ = $(subst $(SRC_FOLDER),$(OBJ_FOLDER),$(SRC:.c=.o))
+OBJ = $(patsubst $(SRC_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(SRC))
 
 ############ ALVOS
 
@@ -74,27 +74,24 @@ all: $(OBJ_FOLDER) $(OUTPUTS_FOLDER) $(EXECUTAVEL)
 
 # gera pasta dos arquivos-objetos
 $(OBJ_FOLDER) $(OUTPUTS_FOLDER):
-	mkdir -p $@
+	@mkdir -p $@
 
 # linka o executável aos arquivos-objeto
 $(EXECUTAVEL): $(OBJ_FOLDER)/$(MAIN:.c=.o) $(OBJ)
-	$(CPP) $^ -o $@ $(CFLAGS)
-	@echo executavel
+	@$(CPP) $^ -o $@ $(CFLAGS)
 
 # gera arquivos-objeto
 $(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c
-	$(CPP) -c $< -o $@ $(CFLAGS)
-	@echo objs
+	@$(CPP) -c $< -o $@ $(CFLAGS)
 
 $(OBJ_FOLDER)/$(MAIN:.c=.o): $(MAIN)
-	$(CPP) -c $< -o $@ $(CFLAGS)
-	@echo main
+	@$(CPP) -c $< -o $@ $(CFLAGS)
 
 clean:
-	rm -rf $(OBJ_FOLDER) $(OUTPUTS_FOLDER) $(EXECUTAVEL)
+	@rm -rf $(OBJ_FOLDER) $(OUTPUTS_FOLDER) $(EXECUTAVEL)
 
 run:
-	./$(EXECUTAVEL) $(INPUT)
+	@./$(EXECUTAVEL) $(INPUT)
 
 val:
 	valgrind --leak-check=full ./$(EXECUTAVEL) $(INPUT)
