@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "Dados.h"
+#include "../include/dados.h"
 
 Dados* lerEntrada(char* arquivo){
 

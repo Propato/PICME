@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "Funcoes/Dados.h"
+#include <string.h>
 
-void multiplica_U(Dados* dados){
+#include "../include/dados.h"
+#include "../include/cholesky.h"
+
+void multiplica_U_C(Dados* dados){
 
   int i, j;
 
@@ -41,13 +44,17 @@ void multiplica_L(Dados* dados){
   }
 }
 
-int main(int argc, char** argv){
+void main_C(char** argv){
 
   time_t tempo;
   tempo = clock();
   
+  char* nome_saida = (char*)malloc(sizeof(char)*30);
+  strcpy(nome_saida, "Saidas/C/vet");
+  strcat(nome_saida, &argv[1][strlen(argv[1])-5]);
+  printf("%s", nome_saida);
+
   Dados* dados = lerEntrada(argv[1]);
-  FILE* saida = fopen(argv[2], "w");
 
   int i, j, l;
 
@@ -64,19 +71,15 @@ int main(int argc, char** argv){
       }
     }
   }
-
   multiplica_L(dados);
-  multiplica_U(dados);
+  multiplica_U_C(dados);
 
-  imprimeVet(argv[2], dados->n, dados->b);
-
-  fclose(saida);
+  imprimeVet(nome_saida, dados->n, dados->b);
 
   tempo = clock() - tempo;
 
   Infos("C", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, 0, Norma(dados->n, dados->b));
 
   cleanDados(dados);
-
-  return 0;
+  free(nome_saida);
 }

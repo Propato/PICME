@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "Funcoes/Dados.h"
+#include <string.h>
+
+#include "../include/dados.h"
+#include "../include/gauss_seidel.h"
 
 void Gauss_Seidel(Dados* dados){
 
@@ -20,25 +23,7 @@ void Gauss_Seidel(Dados* dados){
   }
 }
 
-void clean(int n, double **matriz, double *vet, double *x, double *aux){
-  free(vet);
-  free(x);
-  free(aux);
-
-  for(int i=0; i<n; i++){
-    free(matriz[i]);
-  }free(matriz);
-}
-
-void imprime_vet(int n, double *vet, FILE* saida){
-
-  for(int i=0; i<n; i++){
-
-    fprintf(saida, "%.15lf\n", vet[i]);
-  }
-}
-
-int erro(Dados* dados){
+int erro_GS(Dados* dados){
 
   double aux, X, Y, somaX=0, somaY=0;
   int i;
@@ -60,13 +45,23 @@ int erro(Dados* dados){
   }else return 0;
 }
 
-int main(int argc, char** argv){
+void main_GS(char** argv){
 
   time_t tempo;
   tempo = clock();
   
+  char* nome_saida = (char*)malloc(sizeof(char)*30);
+  strcpy(nome_saida, "Saidas/GS/vet");
+  strcat(nome_saida, &argv[1][strlen(argv[1])-5]);
+  printf("%s", nome_saida);
+
+  char* nome_normas = (char*)malloc(sizeof(char)*30);
+  strcpy(nome_normas, "Saidas/GS/normas_vet");
+  strcat(nome_normas, &argv[1][strlen(argv[1])-5]);
+  printf("%s", nome_normas);
+
   Dados* dados = lerEntrada(argv[1]);
-  FILE* normas = fopen(argv[3], "w");
+  FILE* normas = fopen(nome_normas, "w");
 
   int i=0;
 
@@ -79,19 +74,19 @@ int main(int argc, char** argv){
     if(i%10 == 0)
       fprintf(normas, "%.10lf\n", Norma(dados->n, dados->x));
 
-    igualdade = erro(dados);
+    igualdade = erro_GS(dados);
   }
     if(i%10 != 0)
       fprintf(normas, "%.10lf\n", Norma(dados->n, dados->x));
 
-  imprimeVet(argv[2], dados->n, dados->x);
+  imprimeVet(nome_saida, dados->n, dados->x);
 
   tempo = clock() - tempo;
 
   Infos("GS", argv[1], ((double)tempo)*2/CLOCKS_PER_SEC, i*3, Norma(dados->n, dados->x));
   
   cleanDados(dados);
+  free(nome_saida);
+  free(nome_normas);
   fclose(normas);
-
-  return 0;
 }
