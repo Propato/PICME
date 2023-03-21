@@ -1,56 +1,3 @@
-# executaveis = Cexe GJexe GSexe LUexe
-
-# CPP = gcc
-# flags = -lm -g -Wall
-
-# obj = src/LU.o src/Cholesky.o src/Gauss-Jacobi.o src/Gauss-Seidel.o src/Funcoes/Dados.o
-
-# pastas = obj Executaveis Saidas/LU Saidas/Cholesky Saidas/Gauss-Jacobi Saidas/Gauss-Seidel
-
-# ##ALTERE VALOR DE <matriz> PARA ESPECIFICAR QUAL ARQUIVO DESEJA LER E EXECUTAR##
-# ##Possiveis valores -> 1, 2 e 3##
-# matriz = 3
-
-# arqLU = Entradas/matriz$(matriz).txt Saidas/LU/vet$(matriz).txt
-# arqC  = Entradas/matriz$(matriz).txt Saidas/Cholesky/vet$(matriz).txt
-# arqGJ = Entradas/matriz$(matriz).txt Saidas/Gauss-Jacobi/vet$(matriz).txt Saidas/Gauss-Jacobi/NormasVet$(matriz).txt
-# arqGS = Entradas/matriz$(matriz).txt Saidas/Gauss-Seidel/vet$(matriz).txt Saidas/Gauss-Seidel/NormasVet$(matriz).txt
-
-# all: carrega | diretorios
-
-# carrega: $(obj)
-# 	@echo Compilando...
-	
-# 	gcc -o LUexe LU.o Dados.o $(flags)
-# 	gcc -o Cexe Cholesky.o Dados.o $(flags)
-# 	gcc -o GJexe Gauss-Jacobi.o Dados.o $(flags)
-# 	gcc -o GSexe Gauss-Seidel.o Dados.o $(flags)
-	
-# 	@echo Compilado!!!
-
-# %.o: %.c
-# 	gcc -c $^ $(flags)
-	
-# diretorios:
-# 	@mkdir -p $(pastas)
-# 	@mv *.o ./obj
-# 	@mv LUexe ./Executaveis
-# 	@mv Cexe ./Executaveis
-# 	@mv GJexe ./Executaveis
-# 	@mv GSexe ./Executaveis
-# 	@echo Pastas geradas e arquivos armazenados!!
-	
-# clean:
-# 	rm -rf *.o obj Saidas $(executaveis) Executaveis
-
-# run:
-# 	./Executaveis/LUexe $(arqLU) & ./Executaveis/Cexe $(arqC) & ./Executaveis/GJexe $(arqGJ) & ./Executaveis/GSexe $(arqGS)
-
-# val:
-# 	valgrind ./Executaveis/LUexe $(arqLU) & valgrind ./Executaveis/Cexe $(arqC) & valgrind ./Executaveis/GJexe $(arqGJ) & valgrind ./Executaveis/GSexe $(arqGS)
-
-#################################################################################################################################################
-
 VAL = 1
 
 INPUT = ./Entradas/matriz$(VAL).txt
@@ -69,10 +16,10 @@ OBJ = $(patsubst $(SRC_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(SRC))
 
 ############ ALVOS
 
-# gera o executável, a pasta obj e armazena os .o nela
+# gera o executável, a pasta obj e as pastas de saida
 all: $(OBJ_FOLDER) $(OUTPUTS_FOLDER) $(EXECUTAVEL)
 
-# gera pasta dos arquivos-objetos
+# gera pasta dos arquivos-objetos as pastas de saida
 $(OBJ_FOLDER) $(OUTPUTS_FOLDER):
 	@mkdir -p $@
 
