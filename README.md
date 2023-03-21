@@ -21,7 +21,7 @@ Nos arquivos se encontra:
 - `make clean` remove todas as pastas e arquivos gerados.
 - `make val` executa com o valgrind para checagem de vazamentos de memória.
 
-## Ferramentas utilizadas nos trabalhos
+## Ferramentas utilizadas
 
 <table>
     <tr align="center">
