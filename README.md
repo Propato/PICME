@@ -16,12 +16,10 @@ Nos arquivos se encontra:
 
 ## Makefile
 
-```
-make all == carrega todos .o e executaveis, criando pastas para armazena-los e pastas de saida para cada método.
-make run == executa os códigos, armazenando um .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com dados sobre os métodos, tendo o tempo que levou para terminar a execução de cada método e a norma do vetor resultante final, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
-make clean == remove todas as pastas e arquivos gerados.
-make val == executa com o valgrind para checagem de vazamentos de memória.
-```
+- `make all` carrega todos .o e executaveis, criando pastas para armazena-los e pastas de saida para cada método.
+- `make run` executa os códigos, armazenando um .txt com o vetor solução na pasta determinada de cada método e gerando um .txt com dados sobre os métodos, tendo o tempo que levou para terminar a execução de cada método e a norma do vetor resultante final, no caso de GJ e GS, é escrito também a quantidade de loops até encerrar a execução.
+- `make clean` remove todas as pastas e arquivos gerados.
+- `make val` executa com o valgrind para checagem de vazamentos de memória.
 
 ## Ferramentas utilizadas nos trabalhos
 
